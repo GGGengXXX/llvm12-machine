@@ -1,11 +1,11 @@
 # 使用 Ubuntu 20.04 作为基础镜像
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 # 设置环境变量，避免交互式安装时的提示
 ENV DEBIAN_FRONTEND=noninteractive
 
 # 更新包列表并安装必要的依赖
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y  --fix-missing \
     wget \
     gnupg \
     ca-certificates \

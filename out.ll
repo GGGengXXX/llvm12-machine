@@ -1,19 +1,32 @@
-; ModuleID = 'libsysy.c'
-source_filename = "libsysy.c"
+; ModuleID = 'llvm-link'
+source_filename = "llvm-link"
 target datalayout = "e-m:e-i8:8:32-i16:16:32-i64:64-i128:128-n32:64-S128"
 target triple = "aarch64-unknown-linux-gnu"
 
-@.str = private unnamed_addr constant [3 x i8] c"%c\00", align 1
-@.str.1 = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@main.a = internal global i32 1, align 4
+@.str = private unnamed_addr constant [11 x i8] c"a = %d\0A666\00", align 1
+@.str.1 = private unnamed_addr constant [3 x i8] c"%c\00", align 1
+@.str.1.2 = private unnamed_addr constant [3 x i8] c"%d\00", align 1
 @.str.2 = private unnamed_addr constant [4 x i8] c"%d:\00", align 1
 @.str.3 = private unnamed_addr constant [4 x i8] c" %d\00", align 1
 @.str.4 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
 @.str.5 = private unnamed_addr constant [3 x i8] c"%s\00", align 1
 
 ; Function Attrs: noinline nounwind optnone uwtable
+define dso_local i32 @main() #0 {
+  %1 = alloca i32, align 4
+  store i32 0, i32* %1, align 4
+  %2 = load i32, i32* @main.a, align 4
+  %3 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([11 x i8], [11 x i8]* @.str, i64 0, i64 0), i32 %2)
+  ret i32 0
+}
+
+declare dso_local i32 @printf(i8*, ...) #1
+
+; Function Attrs: noinline nounwind optnone uwtable
 define dso_local i32 @getchar() #0 {
   %1 = alloca i8, align 1
-  %2 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i8* %1)
+  %2 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1, i64 0, i64 0), i8* %1)
   %3 = load i8, i8* %1, align 1
   %4 = zext i8 %3 to i32
   ret i32 %4
@@ -24,7 +37,7 @@ declare dso_local i32 @__isoc99_scanf(i8*, ...) #1
 ; Function Attrs: noinline nounwind optnone uwtable
 define dso_local i32 @getint() #0 {
   %1 = alloca i32, align 4
-  %2 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1, i64 0, i64 0), i32* %1)
+  %2 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1.2, i64 0, i64 0), i32* %1)
   br label %3
 
 3:                                                ; preds = %6, %0
@@ -46,7 +59,7 @@ define dso_local i32 @getarray(i32* %0) #0 {
   %3 = alloca i32, align 4
   %4 = alloca i32, align 4
   store i32* %0, i32** %2, align 8
-  %5 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1, i64 0, i64 0), i32* %3)
+  %5 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1.2, i64 0, i64 0), i32* %3)
   store i32 0, i32* %4, align 4
   br label %6
 
@@ -61,7 +74,7 @@ define dso_local i32 @getarray(i32* %0) #0 {
   %12 = load i32, i32* %4, align 4
   %13 = sext i32 %12 to i64
   %14 = getelementptr inbounds i32, i32* %11, i64 %13
-  %15 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1, i64 0, i64 0), i32* %14)
+  %15 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1.2, i64 0, i64 0), i32* %14)
   br label %16
 
 16:                                               ; preds = %10
@@ -80,18 +93,16 @@ define dso_local void @putint(i32 %0) #0 {
   %2 = alloca i32, align 4
   store i32 %0, i32* %2, align 4
   %3 = load i32, i32* %2, align 4
-  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1, i64 0, i64 0), i32 %3)
+  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1.2, i64 0, i64 0), i32 %3)
   ret void
 }
-
-declare dso_local i32 @printf(i8*, ...) #1
 
 ; Function Attrs: noinline nounwind optnone uwtable
 define dso_local void @putch(i32 %0) #0 {
   %2 = alloca i32, align 4
   store i32 %0, i32* %2, align 4
   %3 = load i32, i32* %2, align 4
-  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %3)
+  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1, i64 0, i64 0), i32 %3)
   ret void
 }
 
@@ -145,15 +156,15 @@ define dso_local void @putstr(i8* %0) #0 {
 attributes #0 = { noinline nounwind optnone uwtable "disable-tail-calls"="false" "frame-pointer"="non-leaf" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="generic" "target-features"="+neon" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #1 = { "disable-tail-calls"="false" "frame-pointer"="non-leaf" "less-precise-fpmad"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="generic" "target-features"="+neon" "unsafe-fp-math"="false" "use-soft-float"="false" }
 
-!llvm.module.flags = !{!0, !1, !2, !3, !4}
-!llvm.ident = !{!5}
+!llvm.ident = !{!0, !0}
+!llvm.module.flags = !{!1, !2, !3, !4, !5}
 
-!0 = !{i32 1, !"wchar_size", i32 4}
-!1 = !{i32 1, !"branch-target-enforcement", i32 0}
-!2 = !{i32 1, !"sign-return-address", i32 0}
-!3 = !{i32 1, !"sign-return-address-all", i32 0}
-!4 = !{i32 1, !"sign-return-address-with-bkey", i32 0}
-!5 = !{!"Ubuntu clang version 12.0.1-19ubuntu3"}
+!0 = !{!"Ubuntu clang version 12.0.1-19ubuntu3"}
+!1 = !{i32 1, !"wchar_size", i32 4}
+!2 = !{i32 1, !"branch-target-enforcement", i32 0}
+!3 = !{i32 1, !"sign-return-address", i32 0}
+!4 = !{i32 1, !"sign-return-address-all", i32 0}
+!5 = !{i32 1, !"sign-return-address-with-bkey", i32 0}
 !6 = distinct !{!6, !7}
 !7 = !{!"llvm.loop.mustprogress"}
 !8 = distinct !{!8, !7}
