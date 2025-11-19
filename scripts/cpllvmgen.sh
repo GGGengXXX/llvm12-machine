@@ -1,0 +1,1 @@
+cp ~/ggengx-by/llvm_ir.txt ../llvm_ir.ll
